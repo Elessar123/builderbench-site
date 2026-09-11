@@ -1,6 +1,6 @@
-import {explorationHistory} from './discoveries.js?v=8';
-import {overviewComparison, comparisonSections} from './project-comparisons.js?v=8';
-import {outcomeSummary, attemptChart, structureChart, studyConditions, studyReport} from './project-study.js?v=8';
+import {explorationHistory} from './discoveries.js?v=9';
+import {overviewComparison, comparisonSections} from './project-comparisons.js?v=9';
+import {outcomeSummary, attemptChart, structureChart, studyConditions, studyReport} from './project-study.js?v=9';
 
 const main = document.querySelector('#main');
 const route = location.pathname.split('/').filter(Boolean)[0] || 'overview';
@@ -10,11 +10,11 @@ const arrow = '<span aria-hidden="true">↗</span>';
 const intro = (number, label, title, text) => `<div class="page-intro"><p class="eyebrow">${number} / ${label}</p><h1>${title}</h1><p>${text}</p></div>`;
 const link = (url, text) => `<a class="text-link" href="${url}">${text} ${arrow}</a>`;
 // Only presentation data is shipped; raw experiment records stay outside dist.
-import {evidence, comparisons, reported, discoveries} from './display-data.js?v=8';
+import {evidence, comparisons, reported, discoveries} from './display-data.js?v=9';
 if (evidence) {
   const {meta, tasks} = evidence;
   const task = id => tasks.find(t => t.id === id);
-      const video = (t, options = {}) => `<div class="media-stage ${options.className || ''}"><video ${options.id ? `id="${options.id}"` : ''} src="${t.video}" ${options.poster === false ? '' : `poster="${t.images.poster||t.images.final}"`} controls playsinline ${options.loop ? 'muted loop' : ''} preload="metadata" aria-label="${escape(t.name)} construction video"></video>${options.label ? `<span class="play-note">${options.label}</span>` : ''}</div>`;
+      const video = (t, options = {}) => `<div class="media-stage ${options.className || ''}"><video ${options.id ? `id="${options.id}"` : ''} src="${t.video}" ${options.poster === false ? '' : `poster="${t.images.poster||t.images.final}"`} controls playsinline ${options.loop ? 'muted loop' : ''} preload="${options.preload || 'metadata'}" aria-label="${escape(t.name)} construction video"></video>${options.label ? `<span class="play-note">${options.label}</span>` : ''}</div>`;
   const firstText = t => t.firstPass == null ? 'No recorded pass' : `Attempt ${t.firstPass}`;
   const titleMap = {overview:'How far can an Agent get with vision and retries?',results:'Agent vs. Reflexion and RL',stories:'Inside a retry',films:'Watch the builds',report:'Experiment notes'};
   document.title = `${titleMap[route] || titleMap.overview} — Agent Builds`;
@@ -23,7 +23,35 @@ if (evidence) {
 
   function overview() {
     const featured=task('cube-10-task-1');
-    main.innerHTML=`<div class="wrap"><section class="hero"><div><p class="eyebrow">BUILDERBENCH · AN EXPLORATORY STUDY</p><h1>Give an agent vision.<br>Let it try again.<br><em>See what it can build.</em></h1><p class="lead">With visual feedback and repeated plan revision, Claude Code Agent completes ${reported.solved} of ${reported.total} construction tasks. The solutions include towers, bridges, overhangs, and held assemblies.</p>${link('/results/','Explore the evidence')}</div><div>${video(featured,{className:'hero-media',label:'SAVED SUCCESSFUL BUILD',loop:true})}<div class="film-label"><b>Temple · 10 cubes</b><span>Project replay · plan #62</span></div></div></section><section class="metrics" aria-label="Claude Code Agent results"><div class="metric"><strong>${reported.solved}<small> / ${reported.total}</small></strong><p><b>Original tasks completed</b><br>${reported.unresolved.length} have no registered pass</p></div><div class="metric"><strong>${reported.beyondThird}<small> / ${reported.solved}</small></strong><p><b>Solved beyond revision 3</b><br>Earliest retained passing record</p></div><div class="metric"><strong>5<small> mm</small></strong><p><b>Strict position tolerance</b><br>Every active cube · fixed identity</p></div></section><section class="section"><div class="section-heading"><div><p class="overline">THE CENTRAL FINDING</p><h2>The Agent can change<br>how a task is solved.</h2></div><p>Visual and numerical feedback support more than small corrections. The saved plans change support geometry, grasp, order, and release.</p></div><div class="feature-row"><a href="/stories/?case=t-stack" class="image-link"><img src="${task('cube-3-task-2').images.final}" alt="T-stack supported by a rotated base" loading="lazy"><span class="image-action">Inspect the revisions ${arrow}</span></a><div><span class="feature-index">01 / REASON ABOUT SUPPORT</span><h3>Rotate the base.<br>Widen the support.</h3><p>Earlier retries called the build impossible. A test of base orientation changes that conclusion; the winning plan reuses a paired grasp from a failed attempt.</p>${link('/stories/?case=t-stack','Follow the revisions')}</div></div><div class="feature-row reverse"><div><span class="feature-index">02 / REVISE THE GRASP</span><h3>Assemble on the table.<br>Lift the blocks together.</h3><p>The Agent adapts a grasp learned on a three-cube task, fills a gap with a spare, and calibrates the heavier assembly.</p>${link('/stories/?case=clamp','See the held assembly')}</div><a href="/stories/?case=clamp" class="image-link"><img src="${task('cube-4-task-4').images.final}" alt="An assembly lifted by the gripper" loading="lazy"><span class="image-action">Inspect the revisions ${arrow}</span></a></div></section>${overviewComparison()}${studyConditions()}</div><section class="dark-section"><div class="wrap dark-inner"><div><p class="eyebrow">WATCH THE SOLUTIONS</p><h2>Towers. Bridges.<br>Held assemblies.<br><em>Built through exploration.</em></h2><p>Each replay is linked to a registered passing plan. Browse ${meta.originalSolved} original builds and ${meta.newSolved} additional structures.</p>${link('/films/','Watch the builds')}</div><div class="mini-film-grid">${['cube-10-task-1','cube-8-task-3','cube-4-task-4','cube-3-task-2'].map(id=>{const t=task(id);return `<a href="/films/?task=${id}"><img src="${t.images.poster||t.images.final}" alt="${escape(t.name)}" loading="lazy"><span>${escape(t.name)} ${arrow}</span></a>`}).join('')}</div></div></section><div class="wrap closing-note"><p>How far can an Agent get when it can see the result and try again? The project records offer a concrete answer—and a clear account of the conditions.</p>${link('/report/','Read the findings')}</div>`;
+    main.innerHTML=`
+<div class="wrap">
+  <section class="hero">
+    <div><p class="eyebrow">BUILDERBENCH · AN EXPLORATORY STUDY</p><h1>Give an agent vision.<br>Let it try again.<br><em>See what it can build.</em></h1><p class="lead">With visual feedback and repeated plan revision, Claude Code Agent completes ${reported.solved} of ${reported.total} construction tasks. The solutions include towers, bridges, overhangs, and held assemblies.</p>${link('/results/','Explore the results')}</div>
+    <div>${video(featured,{className:'hero-media',label:'SUCCESSFUL BUILD',loop:true})}<div class="film-label"><b>Temple · 10 cubes</b><span>Completed by Claude Code Agent</span></div></div>
+  </section>
+  <section class="benchmark-intro" aria-labelledby="benchmark-title">
+    <div><p class="overline">WHAT IS BUILDERBENCH?</p><h2 id="benchmark-title">A robot. Building blocks.<br>A structure to figure out.</h2></div>
+    <div><p>BuilderBench is a simulated block-building benchmark for AI agents. A robot arm must arrange cubes into target structures, from simple stacks to bridges and overhangs.</p><p>Success requires choosing a build order, finding stable supports, and controlling grasp and release. The experiments here use its 51-task suite and a separate set of 16 additional tasks.</p><a class="text-link" href="https://rajghugare19.github.io/builderbench/">About the benchmark ${arrow}</a></div>
+  </section>
+  <section class="metrics" aria-label="Claude Code Agent results"><div class="metric"><strong>${reported.solved}<small> / ${reported.total}</small></strong><p><b>Original tasks completed</b><br>${reported.unresolved.length} have no registered pass</p></div><div class="metric"><strong>${reported.beyondThird}<small> / ${reported.solved}</small></strong><p><b>Solved beyond revision 3</b><br>Earliest retained passing record</p></div><div class="metric"><strong>5<small> mm</small></strong><p><b>Strict position tolerance</b><br>Every active cube · fixed identity</p></div></section>
+  <section class="section">
+    <div class="section-heading"><div><p class="overline">THE CENTRAL FINDING</p><h2>The Agent can change<br>how a task is solved.</h2></div><p>Visual and numerical feedback support more than small corrections. The saved plans change support geometry, grasp, order, and release.</p></div>
+    <div class="feature-row">
+      ${video(task('cube-3-task-2'),{className:'feature-video',preload:'none'})}
+      <div><span class="feature-index">01 / REASON ABOUT SUPPORT</span><h3>Rotate the base.<br>Widen the support.</h3><p>Earlier retries called the build impossible. A test of base orientation changes that conclusion; the winning plan reuses a paired grasp from a failed attempt.</p>${link('/stories/?case=t-stack','Follow the revisions')}</div>
+    </div>
+    <div class="feature-row reverse">
+      <div><span class="feature-index">02 / REVISE THE GRASP</span><h3>Assemble on the table.<br>Lift the blocks together.</h3><p>The Agent adapts a grasp learned on a three-cube task, fills a gap with a spare, and calibrates the heavier assembly.</p>${link('/stories/?case=clamp','See how the grasp evolved')}</div>
+      ${video(task('cube-4-task-4'),{className:'feature-video',preload:'none'})}
+    </div>
+  </section>
+  ${overviewComparison()}${studyConditions()}
+</div>
+<section class="dark-section"><div class="wrap dark-inner">
+  <div><p class="eyebrow">WATCH THE SUCCESSFUL BUILDS</p><h2>Towers. Bridges.<br>Held assemblies.<br><em>Built through exploration.</em></h2><p>Watch the ${meta.originalSolved} successful builds behind the 45/51 result, plus ${meta.newSolved} successes from a separate 16-task set. The additional tasks are counted separately.</p>${link('/films/','Browse all 52 videos')}</div>
+  <div class="mini-film-grid">${['cube-10-task-1','cube-8-task-3','cube-4-task-4','cube-3-task-2'].map(id=>{const t=task(id);return `<article>${video(t,{className:'overview-clip',preload:'none'})}<a class="mini-film-caption" href="/films/?task=${id}"><span>${escape(t.name)}</span>${arrow}</a></article>`}).join('')}</div>
+</div></section>
+<div class="wrap closing-note"><p>How far can an Agent get when it can see the result and try again? The project records offer a concrete answer—and a clear account of the conditions.</p>${link('/report/','Read the findings')}</div>`;
   }
 
   function results() {
