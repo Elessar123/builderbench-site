@@ -1,0 +1,39 @@
+.results-chart{grid-template-columns:1.4fr 1fr;gap:6%}
+.failure-films .image-link img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.record-link{color:var(--blue);margin-top:9px;white-space:nowrap}
+.small-note code,.evidence-details code{overflow-wrap:anywhere}
+.preview-scores>div:last-child strong{color:var(--blue)}
+.preview-scores>div:first-child strong{color:var(--ink)}
+.exploration-history{padding:10px 0 32px}
+.exploration-history .section-heading{margin-bottom:28px}
+.exploration-history .section-heading h2{font:400 39px/1.12 var(--serif);max-width:560px}
+.exploration-stages{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:27px;border-top:1px solid var(--line);padding-top:24px}
+.trace-stage-label{font-size:11px;line-height:1.5;color:var(--blue);font-weight:550;text-transform:uppercase;letter-spacing:.65px;margin:0 0 13px}
+.trace-stage-label span{display:block;font-size:22px;letter-spacing:0;margin-bottom:10px}
+.exploration-stages h3{font:400 26px/1.15 var(--serif);margin:0 0 13px}
+.exploration-stages article>p:not(.trace-stage-label){font-size:14px;color:var(--muted);line-height:1.75}
+.trace-source{display:block;font-size:11px;color:var(--muted);margin-top:13px}
+.discovery-pattern{border-left:3px solid var(--blue);padding:3px 0 3px 23px;margin:30px 0}
+.discovery-pattern .overline{margin-bottom:8px}
+.discovery-pattern>p:last-child{font:400 26px/1.3 var(--serif);margin:0;max-width:1000px}
+.discovery-evidence article{padding:15px 0;border-bottom:1px solid var(--line)}
+.discovery-evidence h4{font-size:15px;font-weight:550;margin:0 0 6px}
+.discovery-evidence .small-note{overflow-wrap:anywhere}
+.discovery-evidence pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.75 ui-monospace,Consolas,monospace;color:#4f5c70;background:var(--pale);padding:17px 20px;margin:12px 0}
+@media(max-width:1050px){.exploration-stages{grid-template-columns:1fr 1fr;gap:26px 35px}}
+@media(max-width:760px){
+  .results-chart{grid-template-columns:1fr;gap:30px}
+  .task-table-wrap{overflow-x:auto}
+  .task-table{min-width:710px}
+  .task-table thead th:nth-child(3),.task-table tbody td:nth-child(3){display:table-cell}
+  .task-table thead th:first-child{width:24%}
+  .task-table th:nth-child(4){width:19%}
+  .task-table tbody th{max-width:none}
+  .exploration-history .section-heading h2{font-size:34px}
+  .exploration-stages{grid-template-columns:1fr;gap:23px}
+  .exploration-stages article{padding-bottom:18px;border-bottom:1px solid var(--line)}
+  .trace-stage-label span{display:inline;margin-right:12px;font-size:16px}
+  .exploration-stages h3{font-size:29px}
+  .exploration-stages article>p:not(.trace-stage-label){font-size:15px}
+  .discovery-pattern>p:last-child{font-size:25px}
+}

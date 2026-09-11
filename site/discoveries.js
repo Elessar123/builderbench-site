@@ -1,0 +1,7 @@
+const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+export function explorationHistory(data, key) {
+  const item=data.cases[key];
+  if(!item)return '';
+  return `<section class="exploration-history" id="exploration"><div class="section-heading"><div><p class="overline">HOW THE STRATEGY EMERGED</p><h2>${escape(item.title)}</h2></div><p>${escape(item.lead)}</p></div><div class="exploration-stages">${item.stages.map((stage,i)=>`<article><p class="trace-stage-label"><span>${String(i+1).padStart(2,'0')}</span>${escape(stage.label)}</p><h3>${escape(stage.title)}</h3><p>${escape(stage.text)}</p></article>`).join('')}</div><div class="discovery-pattern"><p class="overline">${escape(item.pattern)}</p><p>${escape(item.lesson)}</p></div><details class="evidence-details discovery-evidence"><summary>Final execution result</summary><div class="comparison-table-wrap"><table class="comparison-table"><thead><tr><th>Passing revision</th><th>Active cubes passing</th><th>Worst error</th><th>Strict result</th></tr></thead><tbody><tr><th>#${item.final.revision}</th><td>${item.final.activePassed}</td><td>${item.final.maxErrorMm.toFixed(3)} mm</td><td>Pass</td></tr></tbody></table></div><p class="small-note">The strategy account is an edited summary of experiment notes and plans. Diagnostic probes and scored robot executions serve different purposes; the result above comes from a robot-action plan.</p></details></section>`;
+}
